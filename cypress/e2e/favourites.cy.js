@@ -25,23 +25,16 @@ describe("The favourites feature", () => {
     });
   });
 
-  describe("The favourites page", () => {
+  describe("From the favourites page to a movie's details", () => {
     beforeEach(() => {
       // Select two favourites and navigate to Favourites page
       cy.get("button[aria-label='add to favorites']").eq(1).click();
       cy.get("button[aria-label='add to favorites']").eq(3).click();
       cy.get("button").contains("Favorites").click();
     });
-    it("only the tagged movies are listed", () => {
-      cy.get(".MuiCardHeader-content").should("have.length", 2);
-      cy.get(".MuiCardHeader-content")
-        .eq(0)
-        .find("p")
-        .contains(movies[1].title);
-      cy.get(".MuiCardHeader-content")
-        .eq(1)
-        .find("p")
-        .contains(movies[3].title);
+    it("should navigate to the movie details page.", () => {
+      cy.get(".MuiCardActions-root").eq(0).contains("More Info").click();
+      cy.url().should("include", `/movies/${movies[1].id}`);
     });
   });
 });

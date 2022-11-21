@@ -47,7 +47,7 @@ export default function SignInSide() {
    
     }
     
-  }, [user, loading]);
+  }, [user, loading,navigate]);
   
 
 

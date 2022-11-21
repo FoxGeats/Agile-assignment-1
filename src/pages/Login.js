@@ -42,15 +42,14 @@ export default function SignInSide() {
   useEffect(() => {
     if (loading) {
       <Spinner />
+     if (user) navigate("/");  
       return;
+   
     }
     
   }, [user, loading]);
   
-  const login=(email, password)=>{
-    logInWithEmailAndPassword(email, password)
-    if (user) navigate("/");
-  }
+
 
 
 
@@ -123,7 +122,7 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => login(email,password)}
+                onClick={() =>  logInWithEmailAndPassword(email, password)}
               >
                 Sign In
               </Button>

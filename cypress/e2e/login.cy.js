@@ -1,14 +1,21 @@
 let movies;
+
+Cypress.Commands.add('typeEmailAndPassword', (email,password) => {
+    cy.get("[name='email']").type(email);
+    cy.get("[name='password']").type(password);
+    cy.get("Button[name='signIn']").click();
+  })
+const Email='1563109910@qq.com'
+const Password='123456'
+
 describe("User funcitonality", () => {
-    
+   
     describe("Login Page and log out page", () => {
         it("Should log in and display the home page", () => {
             cy.visit("/pages/login");
             cy.get("h1").contains("Sign in");
-            
-            cy.get("[name='email']").type(`${Cypress.env("EMAIL")}`);
-            cy.get("[name='password']").type(`${Cypress.env("PASSWORD")}`);
-            cy.get("Button[name='signIn']").click();
+            cy.typeEmailAndPassword(Email,Password)
+           
             cy.get("span").contains("Hello")
         });
         it("Should navigate back to the logout page when the Log out button is clicked", () => {
@@ -21,6 +28,30 @@ describe("User funcitonality", () => {
             cy.get("span").contains("please")
         });
     });
-    
 
+    describe("Login with wrong input", () => {
+        beforeEach(() => {
+            cy.visit("/pages/login");
+          });
+        it("alert invalid-email", () => {
+            cy.typeEmailAndPassword(`qwe`,Password)
+            cy.on('window:alert', (text) => {
+                expect(text).to.contains('invalid-email');
+              });
+             
+        })
+        it("alert user not found", () => {
+            cy.typeEmailAndPassword(Email,`123`)
+            cy.on('window:alert', (text) => {
+                expect(text).to.contains('user-not-found');
+              });
+        })
+        it("alert wrong password", () => {
+            cy.typeEmailAndPassword(`123@qq.com`,`123456`)
+            cy.on('window:alert', (text) => {
+                expect(text).to.contains('wrong-password');
+              });
+        })
+    
+    })
 })

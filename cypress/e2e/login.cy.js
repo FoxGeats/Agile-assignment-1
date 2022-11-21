@@ -41,13 +41,13 @@ describe("User funcitonality", () => {
              
         })
         it("alert user not found", () => {
-            cy.typeEmailAndPassword(Email,`123`)
+            cy.typeEmailAndPassword(`123@qq.com`,`123456`) 
             cy.on('window:alert', (text) => {
                 expect(text).to.contains('user-not-found');
               });
         })
         it("alert wrong password", () => {
-            cy.typeEmailAndPassword(`123@qq.com`,`123456`)
+           cy.typeEmailAndPassword(Email,`123`)
             cy.on('window:alert', (text) => {
                 expect(text).to.contains('wrong-password');
               });

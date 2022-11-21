@@ -11,6 +11,10 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from 'react-query/devtools'
 import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage'
+import LogoutPage from "./pages/logoutPage";
+import Login from "./pages/Login";
+import RegisterPage from "./pages/registerPage";
+import ResetPage from "./pages/resetPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +39,11 @@ const App = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="*" element={ <Navigate to="/" /> } />
       <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
+      <Route path="/pages/logout" element={<LogoutPage />} />
+      <Route path="/pages/login" element={<Login />} />
+      <Route exact path="/register" element={<RegisterPage />} />
+      <Route exact path="/reset" element={<ResetPage />} />
+
     </Routes>
     </MoviesContextProvider>
   </BrowserRouter>

@@ -15,6 +15,9 @@ import LogoutPage from "./pages/logoutPage";
 import Login from "./pages/Login";
 import RegisterPage from "./pages/registerPage";
 import ResetPage from "./pages/resetPage";
+import PeoplePage from './pages/peoplePage'
+import PersonDetailsPage from './pages/personDetailsPage'
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,7 +46,10 @@ const App = () => {
       <Route path="/pages/login" element={<Login />} />
       <Route exact path="/register" element={<RegisterPage />} />
       <Route exact path="/reset" element={<ResetPage />} />
+      <Route path="/movies/people" element={<PeoplePage />} />
+      <Route path="/persons/:id" element={<PersonDetailsPage />} />
 
+      
     </Routes>
     </MoviesContextProvider>
   </BrowserRouter>

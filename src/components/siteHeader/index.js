@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { logout } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase";
 
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
@@ -22,7 +25,7 @@ const SiteHeader = ({ history }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const navigate = useNavigate();
-
+  const [user] = useAuthState(auth);
   const menuOptions = [
     { label: "Home", path: "/" },
     { label: "Favorites", path: "/movies/favorites" },
@@ -30,15 +33,22 @@ const SiteHeader = ({ history }) => {
     { label: "Option 4", path: "/" },
   ];
 
+  const menuUserOptions = [
+    { label: "Log out", path: "/pages/logout" },
+    { label: "Log in", path: "/pages/login" },
+  ]
+
   const handleMenuSelect = (pageURL) => {
+    if (pageURL === "/pages/logout") {
+      logout()
+    }
     navigate(pageURL, { replace: true });
   };
-
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  
+
 
   return (
     <>
@@ -50,55 +60,102 @@ const SiteHeader = ({ history }) => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             All you ever wanted to know about Movies!
           </Typography>
-            {isMobile ? (
-              <>
-                <IconButton
-                  aria-label="menu"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                >
-                  {menuOptions.map((opt) => (
-                    <MenuItem
-                      key={opt.label}
-                      onClick={() => handleMenuSelect(opt.path)}
-                    >
-                      {opt.label}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
-            ) : (
-              <>
+          {user == null ? (
+            <Typography variant="p" sx={{ flexGrow: 1 }}>
+              please log in
+            </Typography>
+          ) :
+            (<Typography variant="p" sx={{ flexGrow: 1 }} >
+              Hello! {user.email}
+            </Typography>)
+          }
+          {isMobile ? (
+            <>
+              <IconButton
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={() => setAnchorEl(null)}
+              >
                 {menuOptions.map((opt) => (
-                  <Button
+                  <MenuItem
                     key={opt.label}
-                    color="inherit"
                     onClick={() => handleMenuSelect(opt.path)}
                   >
                     {opt.label}
-                  </Button>
+                  </MenuItem>
                 ))}
-              </>
-            )}
+
+                {user == null ? (
+                  <MenuItem
+                    key={menuUserOptions[1].label}
+                    color="inherit"
+                    onClick={() => handleMenuSelect(menuUserOptions[1].path)}
+                  >
+                    {menuUserOptions[1].label}
+                  </MenuItem>
+                ) : (<MenuItem
+                  key={menuUserOptions[0].label}
+                  color="inherit"
+                  onClick={() => handleMenuSelect(menuUserOptions[0].path)}
+                >
+                  {menuUserOptions[0].label}
+                </MenuItem>
+                )
+
+                }
+              </Menu>
+            </>
+          ) : (
+            <>
+              {menuOptions.map((opt) => (
+                <Button
+                  key={opt.label}
+                  color="inherit"
+                  onClick={() => handleMenuSelect(opt.path)}
+                >
+                  {opt.label}
+                </Button>
+              ))}
+              {user == null ? (
+                <Button
+                  key={menuUserOptions[1].label}
+                  color="inherit"
+                  onClick={() => handleMenuSelect(menuUserOptions[1].path)}
+                >
+                  {menuUserOptions[1].label}
+                </Button>
+              ) : (<Button
+                key={menuUserOptions[0].label}
+                name="logout"
+                color="inherit"
+                onClick={() => handleMenuSelect(menuUserOptions[0].path)}
+              >
+                {menuUserOptions[0].label}
+              </Button>
+              )
+
+              }
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <Offset />

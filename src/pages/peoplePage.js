@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { getMovies } from "../api/tmdb-api";
-import PageTemplate from '../components/templateMovieListPage';
+import { getPeople } from "../api/tmdb-api";
+import PageTemplate from '../components/templatePeopleListPage';
 import { useQuery } from 'react-query';
 import Spinner from '../components/spinner';
 import AddToFavoritesIcon from '../components/cardIcons/addToFavorites'
 import MyPagination from "../components/myPagination";
 
-const HomePage = (props) => {
+const PeoplePage = (props) => {
   const [page, setPage] = useState(1);
-  const {  data, error, isLoading, isError }  = useQuery(['discover', {page}], getMovies)
+
+  const {  data, error, isLoading, isError }  = useQuery(['people', {page}], getPeople)
 
   if (isLoading) {
     return <Spinner />
@@ -17,22 +18,23 @@ const HomePage = (props) => {
   if (isError) {
     return <h1>{error.message}</h1>
   }  
-  const totalPages = data.total_pages;
-  const movies = data.results;
+
+    const totalPages = data.total_pages;
+  const people = data.results;
 
 
 
   return (
-    <>
+<>
     <PageTemplate
-    title="Discover Movies"
-    movies={movies}
+    title="People"
+    persons={people}
     action={(movie) => {
       return <AddToFavoritesIcon movie={movie} />
     }}
   />
- <MyPagination page={Number(page)} setPage={setPage} totalPages={Number(totalPages)}/>
+<MyPagination page={Number(page)} setPage={setPage} totalPages={Number(totalPages)}/>
 </>
   );
 };
-export default HomePage;
+export default PeoplePage;
